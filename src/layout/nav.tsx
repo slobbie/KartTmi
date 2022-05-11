@@ -3,10 +3,14 @@ import TmiLogo from '../assets/TmiLogo.svg';
 import KartLogo from '../assets/logo_kart.png';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
+import { motion, useAnimation } from 'framer-motion';
 
 const Nav = () => {
   const [selectedTab, setSelectedTab] = useState<number>(1);
   const [nick, setNick] = useState<string>('');
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  const inputAnimation = useAnimation();
   const TabArr = [
     { id: 1, title: '홈', link: '/' },
     { id: 2, title: '랭킹', link: '/rank' },
@@ -17,11 +21,28 @@ const Nav = () => {
     setSelectedTab(id);
   };
 
+  const onSearchToggle = () => {
+    if (searchOpen) {
+      // close animation
+      inputAnimation.start({
+        scaleX: 0,
+      });
+    } else {
+      // open animation
+      inputAnimation.start({
+        scaleX: 1,
+      });
+    }
+    setSearchOpen((prev) => !prev);
+  };
+
   return (
     <Header>
       <NavTop>
         <Logo src={KartLogo} />
-        <LogoTmi src={TmiLogo} />
+        <Link to='/'>
+          <LogoTmi src={TmiLogo} />
+        </Link>
         <Span>
           <a href='https://kart.nexon.com/Main/Index.aspx'>
             카트라이더홈페이지바로가기
@@ -42,6 +63,30 @@ const Nav = () => {
               </Link>
             );
           })}
+          <SearchBar>
+            <Search>
+              <motion.svg
+                onClick={() => onSearchToggle()}
+                animate={{ x: searchOpen ? -185 : 0 }}
+                transition={{ type: 'linear' }}
+                fill='currentColor'
+                viewBox='0 0 20 20'
+                xmlns='http://www.w3.org/2000/svg'
+              >
+                <path
+                  fillRule='evenodd'
+                  d='M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z'
+                  clipRule='evenodd'
+                ></path>
+              </motion.svg>
+              <Input
+                animate={inputAnimation}
+                initial={{ scaleX: 0 }}
+                transition={{ type: 'linear' }}
+                placeholder='Search for id'
+              />
+            </Search>
+          </SearchBar>
         </Ul>
       </NavBar>
     </Header>
@@ -87,6 +132,7 @@ const NavBar = styled.nav`
   width: 100%;
   height: 55px;
   position: relative;
+  display: flex;
   background-color: ${(props) => props.theme.main};
 `;
 
@@ -137,4 +183,35 @@ const Li = styled.li`
     transition: transform 250ms ease-in-out;
     bottom: 0;
   }
+`;
+
+const SearchBar = styled.div`
+  margin-left: auto;
+`;
+
+const Search = styled.div`
+  color: ${(props) => props.theme.white.darker};
+  display: flex;
+  align-items: center;
+  position: relative;
+  border: none;
+  svg {
+    height: 25px;
+    z-index: 21;
+  }
+`;
+
+const Input = styled(motion.input)`
+  // transform-origin 은 변화가 시작하는 위치를 의미
+  transform-origin: right center;
+  position: absolute;
+  right: 0px;
+  padding: 5px 10px;
+  padding-left: 40px;
+  z-index: -1;
+  color: ${(props) => props.theme.white.darker};
+  font-size: 16px;
+  background-color: transparent;
+  border: 1px solid ${(props) => props.theme.white.darker};
+  z-index: 20;
 `;
