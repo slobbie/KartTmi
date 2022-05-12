@@ -1,7 +1,9 @@
+import SearchArea from '../components/home/searchArea';
+
 const Home = () => {
   return (
     <div>
-      <h2>Home</h2>
+      <SearchArea />
     </div>
   );
 };

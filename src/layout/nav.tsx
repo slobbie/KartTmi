@@ -100,7 +100,6 @@ const Header = styled.nav`
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  border: 1px solid black;
 `;
 
 const NavTop = styled.div`
@@ -133,7 +132,8 @@ const NavBar = styled.nav`
   height: 55px;
   position: relative;
   display: flex;
-  background-color: ${(props) => props.theme.main};
+  background-color: transparent;
+  z-index: 30;
 `;
 
 const Ul = styled.ul`
@@ -187,6 +187,7 @@ const Li = styled.li`
 
 const SearchBar = styled.div`
   margin-left: auto;
+  border-radius: 10px;
 `;
 
 const Search = styled.div`
@@ -203,6 +204,7 @@ const Search = styled.div`
 
 const Input = styled(motion.input)`
   // transform-origin 은 변화가 시작하는 위치를 의미
+  border-radius: 10px;
   transform-origin: right center;
   position: absolute;
   right: 0px;
