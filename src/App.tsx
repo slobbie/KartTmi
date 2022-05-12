@@ -1,6 +1,6 @@
 import React from 'react';
 import Nav from './layout/nav';
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { Route, Routes } from 'react-router-dom';
 import Home from './page/home';
 
@@ -17,6 +17,8 @@ function App() {
 }
 
 export default App;
+
+const Section = styled.section``;
 
 const GlobalStyle = createGlobalStyle`
 menu, ol, ul {

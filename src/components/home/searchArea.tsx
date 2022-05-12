@@ -6,6 +6,8 @@ import RBg from '../../assets/rightbg.png';
 import CRBg from '../../assets/covidright.png';
 import CLBg from '../../assets/covidleft.png';
 import Title from './title';
+import Search from './search';
+import MarginTop from '../marginTop';
 
 export const Move = (direction: string) => keyframes`
   100%{
@@ -19,6 +21,7 @@ const SearchArea = () => {
         <ContentWarp>
           <TextBox>
             <Title />
+            <Search />
           </TextBox>
           <ImageWrap>
             <Character alt='배찌' direction='left' src={CLBg} />
@@ -44,11 +47,10 @@ const ContentWarp = styled.div`
   min-width: 680px;
   width: 100%;
   height: 100%;
-  border: 1px solid black;
   margin: 0 auto;
   position: relative;
   max-height: 521px;
-  margin-top: 114px;
+  margin-top: 110px;
 `;
 
 const Background = styled.div`
@@ -59,6 +61,7 @@ const Background = styled.div`
   align-items: center;
   position: relative;
   margin-top: -55px;
+  overflow: hidden;
 `;
 
 const TextBox = styled.div`
@@ -76,7 +79,7 @@ const TextBox = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border: 1px solid black;
+  justify-content: flex-start;
 `;
 
 const ImageWrap = styled.div`
@@ -103,7 +106,7 @@ const Character = styled.img`
 
 const Track = styled.img`
   position: absolute;
-  width: 447px;
+  width: 348px;
   height: 296px;
   top: 215px;
   transform: translateY(-50%);
