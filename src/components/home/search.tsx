@@ -1,7 +1,13 @@
-import { useCallback, useState, useMemo, FormEvent } from 'react';
+import { useCallback, useState, useMemo, FormEvent, useEffect } from 'react';
 import { keyframes } from 'styled-components';
 import styled, { css } from 'styled-components';
 import MarginTop from '../marginTop';
+import axios from 'axios';
+import {
+  API_KEY,
+  BASE_URL,
+  JSON_HEADER,
+} from '../../service/shared/api-constant';
 
 export const expand = (width: string, minWidth: string) => keyframes`
   100%{
@@ -11,6 +17,27 @@ export const expand = (width: string, minWidth: string) => keyframes`
 `;
 
 function Search({ size }: { size?: string }) {
+  const [data, setData] = useState([]);
+  const [nickname, setNickName] = useState('');
+  const getData = () => {
+    axios
+      .get(BASE_URL + `users/nickname/${nickname}`, {
+        headers: {
+          Authorization: API_KEY,
+          ...JSON_HEADER,
+        },
+      })
+      .then((res) => res.data)
+      .then((data) => {
+        console.log(data);
+      });
+  };
+
+  useEffect(() => {
+    if (nickname !== '') {
+      getData();
+    }
+  }, []);
   return (
     <>
       <MarginTop margin={90} />
