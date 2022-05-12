@@ -1,12 +1,17 @@
 import React from 'react';
 import Nav from './layout/nav';
 import { createGlobalStyle } from 'styled-components';
+import { Route, Routes } from 'react-router-dom';
+import Home from './page/home';
 
 function App() {
   return (
     <section>
       <GlobalStyle />
       <Nav />
+      <Routes>
+        <Route path='/' element={<Home />} />
+      </Routes>
     </section>
   );
 }
