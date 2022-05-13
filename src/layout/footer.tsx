@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import FooterImg from '../assets/lablogo.svg';
+
 const Footer = () => {
   return (
     <MainFooter>
@@ -20,7 +21,7 @@ export default Footer;
 
 const MainFooter = styled.footer`
   width: 100%;
-  height: 100px;
+  height: 130px;
   background-color: #fafafa;
 `;
 
@@ -31,8 +32,10 @@ const ContentBox = styled.div`
   padding-bottom: 20px;
   opacity: 0.3;
 `;
+
 const ImgBox = styled.div`
   max-width: 1000px;
+  padding-top: 20px;
   margin: 0 auto;
   display: flex;
   align-items: center;

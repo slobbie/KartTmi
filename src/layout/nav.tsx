@@ -132,7 +132,7 @@ const NavBar = styled.nav`
   height: 55px;
   position: relative;
   display: flex;
-  background-color: transparent;
+  background-color: ${(props) => props.theme.main};
   z-index: 30;
 `;
 

@@ -7,9 +7,6 @@ import CRBg from '../../assets/covidright.png';
 import CLBg from '../../assets/covidleft.png';
 import Title from './title';
 import Search from './search';
-import MarginTop from '../marginTop';
-
-import { useEffect, useState } from 'react';
 
 export const Move = (direction: string) => keyframes`
   100%{
