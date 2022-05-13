@@ -56,7 +56,7 @@ const ContentWarp = styled.div`
 `;
 
 const Background = styled.div`
-  height: calc(100% - 20px);
+  height: 100%;
   background: url(${MainBg}) 50% / cover repeat;
   display: flex;
   flex-direction: row;

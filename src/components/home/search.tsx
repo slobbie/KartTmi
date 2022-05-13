@@ -35,10 +35,10 @@ const Search = () => {
   const onForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     getUserNicknameData(nickname);
+    setNickName('');
   };
 
   const handleAddKeyword = (nickname: string) => {
-    console.log('text', nickname);
     const newKeyword = {
       id: Date.now(),
       text: nickname,
@@ -65,22 +65,24 @@ const Search = () => {
           <IconSearch onClick={() => handleAddKeyword(nickname)} />
         </Form>
         <SuggestionWrap>
-          <SuggestionList>
-            {keywords.map((item: any) => {
-              return (
-                <Text key={item.id}>
-                  <p>
-                    <IoPerson className='userIcon' />
-                    {item.text}
-                  </p>
-                  <IoClose
-                    className='CloseBtn'
-                    onClick={() => handleRemoveKeyword(item.id)}
-                  />
-                </Text>
-              );
-            })}
-          </SuggestionList>
+          {nickname.length > 0 && (
+            <SuggestionList>
+              {keywords.map((item: any) => {
+                return (
+                  <Text key={item.id}>
+                    <p>
+                      <IoPerson className='userIcon' />
+                      {item.text}
+                    </p>
+                    <IoClose
+                      className='CloseBtn'
+                      onClick={() => handleRemoveKeyword(item.id)}
+                    />
+                  </Text>
+                );
+              })}
+            </SuggestionList>
+          )}
         </SuggestionWrap>
       </SearchWrap>
     </>
