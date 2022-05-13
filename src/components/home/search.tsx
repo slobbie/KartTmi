@@ -5,6 +5,7 @@ import Tmibtn from '../../assets/tmibtn.svg';
 import { getUserNicknameData } from '../../service/API/api';
 import styled from 'styled-components';
 import { IoPerson, IoClose } from 'react-icons/io5';
+import { useNavigate } from 'react-router-dom';
 
 export const expand = (width: string, minWidth: string) => keyframes`
   100%{
@@ -18,15 +19,19 @@ const Search = () => {
   const [keywords, setKeywords] = useState(
     JSON.parse(localStorage.getItem('keywords') || '[]')
   );
+  const [userName, setUserName] = useState(
+    JSON.parse(localStorage.getItem('Nickname') || '')
+  );
 
-  // 로컬스토리에 데이터 담기
-  // 검색기록 뿌리기
+  const navigtor = useNavigate();
+
   // 일치 데이터 없을시 메세지
 
   //keyword에 변화가 일어날때만 랜더링
   useEffect(() => {
     localStorage.setItem('keywords', JSON.stringify(keywords));
-  }, [keywords]);
+    localStorage.setItem('Nickname', JSON.stringify(userName));
+  }, [keywords, userName]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickName(e.target.value);
@@ -36,6 +41,7 @@ const Search = () => {
     e.preventDefault();
     getUserNicknameData(nickname);
     setNickName('');
+    navigtor(`/user/${userName}`);
   };
 
   const handleAddKeyword = (nickname: string) => {
@@ -102,6 +108,7 @@ const Form = styled.form`
   width: fit-content;
   height: 100%;
   max-width: 670px;
+  height: 50px;
   margin: 0 auto;
   font-size: 1em;
   display: flex;
@@ -129,7 +136,7 @@ const InputSearch = styled.input`
   display: block;
   flex: 1;
   height: 100%;
-  font-size: 1.2em;
+  /* font-size: 1.2em; */
   background: transparent;
   border: 0;
   outline: none;
