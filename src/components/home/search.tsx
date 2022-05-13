@@ -1,13 +1,10 @@
-import { useCallback, useState, useMemo, FormEvent, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { keyframes } from 'styled-components';
-import styled, { css } from 'styled-components';
 import MarginTop from '../marginTop';
-import axios from 'axios';
-import {
-  API_KEY,
-  BASE_URL,
-  JSON_HEADER,
-} from '../../service/shared/api-constant';
+import Tmibtn from '../../assets/tmibtn.svg';
+import { getUserNicknameData } from '../../service/API/api';
+import styled from 'styled-components';
+import { IoPerson, IoClose } from 'react-icons/io5';
 
 export const expand = (width: string, minWidth: string) => keyframes`
   100%{
@@ -16,103 +13,87 @@ export const expand = (width: string, minWidth: string) => keyframes`
   }
 `;
 
-function Search({ size }: { size?: string }) {
-  const [data, setData] = useState([]);
+const Search = () => {
   const [nickname, setNickName] = useState('');
-  const getData = () => {
-    axios
-      .get(BASE_URL + `users/nickname/${nickname}`, {
-        headers: {
-          Authorization: API_KEY,
-          ...JSON_HEADER,
-        },
-      })
-      .then((res) => res.data)
-      .then((data) => {
-        console.log(data);
-      });
+  const [keywords, setKeywords] = useState(
+    JSON.parse(localStorage.getItem('keywords') || '[]')
+  );
+
+  // 로컬스토리에 데이터 담기
+  // 검색기록 뿌리기
+  // 일치 데이터 없을시 메세지
+
+  //keyword에 변화가 일어날때만 랜더링
+  useEffect(() => {
+    localStorage.setItem('keywords', JSON.stringify(keywords));
+  }, [keywords]);
+
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNickName(e.target.value);
   };
 
-  useEffect(() => {
-    if (nickname !== '') {
-      getData();
-    }
-  }, []);
+  const onForm = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    getUserNicknameData(nickname);
+  };
+
+  const handleAddKeyword = (nickname: string) => {
+    console.log('text', nickname);
+    const newKeyword = {
+      id: Date.now(),
+      text: nickname,
+    };
+    setKeywords([newKeyword, ...keywords]);
+  };
+
+  //검색어 삭제
+  const handleRemoveKeyword = (id: number) => {
+    const nextKeyword = keywords.filter((Keyword: any) => {
+      return Keyword.id !== id;
+    });
+    setKeywords(nextKeyword);
+  };
+
   return (
     <>
       <MarginTop margin={90} />
-      <SearchWrap size={size}>
-        <Form>
+      <SearchWrap>
+        <Form onSubmit={onForm}>
           <FormItem>
-            <InputSearch />
+            <InputSearch value={nickname} onChange={onChange} />
           </FormItem>
-
-          <IconSearchMini></IconSearchMini>
-
-          <IconSearch />
+          <IconSearch onClick={() => handleAddKeyword(nickname)} />
         </Form>
         <SuggestionWrap>
           <SuggestionList>
-            <Text>Hi</Text>
+            {keywords.map((item: any) => {
+              return (
+                <Text key={item.id}>
+                  <p>
+                    <IoPerson className='userIcon' />
+                    {item.text}
+                  </p>
+                  <IoClose
+                    className='CloseBtn'
+                    onClick={() => handleRemoveKeyword(item.id)}
+                  />
+                </Text>
+              );
+            })}
           </SuggestionList>
         </SuggestionWrap>
       </SearchWrap>
     </>
   );
-}
+};
 
-Search.defaultProps = { size: null };
 export default Search;
+
 const SearchWrap = styled.div`
   font-size: 1em;
   height: 66px;
   width: fit-content;
   margin: 0 auto;
-  ${({ size }: { size?: string }) =>
-    size === 'mini' &&
-    css`
-      display: inline-block;
-      height: fit-content;
-      max-width: fit-content;
-      overflow: hidden;
-      float: right;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-      margin: 0;
-      margin-left: auto;
-      transition: all 300ms ease 0ms;
-      font-size: 0.88em;
-      opacity: 1;
-      ${Form} {
-        opacity: 0.5;
-        border: 0;
-        border-radius: 0;
-      }
-      &:hover,
-      &:focus,
-      &:active {
-        border-color: white;
-        ${Form} {
-          opacity: 1;
-        }
-      }
-      ${FormItem} {
-        animation: none;
-        width: 200px;
-      }
-      ${InputSearch} {
-        height: 32px;
-        padding-left: 4px;
-        &::placeholder {
-          color: white;
-          opacity: 1;
-        }
-        &:hover,
-        &:focus,
-        &:active {
-          opacity: 1;
-        }
-      }
-    `}
 `;
 
 const Form = styled.form`
@@ -153,35 +134,50 @@ const InputSearch = styled.input`
   color: inherit;
   padding: 0 10px 0 24px;
   &::placeholder {
-    color: white;
+    color: red;
     opacity: 0.5;
   }
 `;
 
 const IconSearch = styled.button`
   width: 100px;
-  background: url() center / 40% no-repeat;
-`;
-const IconSearchMini = styled.button`
-  > svg {
-    width: 20px;
-    height: 20px;
-  }
-  color: white;
-  background: 0;
+  border: none;
+  cursor: pointer;
+  background: url(${Tmibtn}) center / 40% no-repeat;
 `;
 
 const SuggestionWrap = styled.div`
   width: calc(100% - 50px);
   margin: 0 auto;
 `;
-const SuggestionList = styled.ul``;
+const SuggestionList = styled.ul`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  .userIcon {
+    width: 25px;
+    height: 17px;
+    fill: ${(props) => props.theme.white.darker};
+  }
+`;
 const Text = styled.li`
+  display: flex;
+  width: 100%;
   padding: 1.4rem;
   font-size: 0.8em;
   cursor: pointer;
   text-align: left;
   background: hsla(0, 0%, 100%, 0.2);
+  .CloseBtn {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    fill: ${(props) => props.theme.white.darker};
+    margin-left: auto;
+    &:hover {
+      fill: red;
+    }
+  }
   svg {
     margin-right: 0.6rem;
   }
