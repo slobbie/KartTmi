@@ -46,4 +46,7 @@ a{
   text-decoration: none;
   color: inherit;
 } 
+p{
+  margin: 0;
+}
 `;

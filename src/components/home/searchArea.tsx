@@ -9,6 +9,8 @@ import Title from './title';
 import Search from './search';
 import MarginTop from '../marginTop';
 
+import { useEffect, useState } from 'react';
+
 export const Move = (direction: string) => keyframes`
   100%{
     ${direction === 'left' ? 'margin-left' : 'margin-right'}: -180px;
@@ -80,6 +82,7 @@ const TextBox = styled.div`
   flex-direction: column;
   justify-content: center;
   justify-content: flex-start;
+  z-index: 40;
 `;
 
 const ImageWrap = styled.div`
@@ -111,7 +114,7 @@ const Track = styled.img`
   top: 215px;
   transform: translateY(-50%);
   margin-left: -800px;
-  z-index: 0;
+  /* z-index: 0; */
   ${({ direction }: { direction: string }) =>
     css`
       ${direction === 'left' ? 'left' : 'right'} : 0;
