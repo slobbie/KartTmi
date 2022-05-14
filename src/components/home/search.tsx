@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { keyframes } from 'styled-components';
 import MarginTop from '../marginTop';
 import Tmibtn from '../../assets/tmibtn.svg';
@@ -6,6 +6,14 @@ import { getUserNicknameData } from '../../service/API/api';
 import styled from 'styled-components';
 import { IoPerson, IoClose } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import axios, { AxiosError } from 'axios';
+import {
+  API_KEY,
+  BASE_URL,
+  JSON_HEADER,
+} from '../../service/shared/api-constant';
+import SelectType, { ISelectOption } from './selectType';
 
 export const expand = (width: string, minWidth: string) => keyframes`
   100%{
@@ -19,29 +27,65 @@ const Search = () => {
   const [keywords, setKeywords] = useState(
     JSON.parse(localStorage.getItem('keywords') || '[]')
   );
-  const [userName, setUserName] = useState(
-    JSON.parse(localStorage.getItem('Nickname') || '')
+  // const [userName, setUserName] = useState(
+  //   JSON.parse(localStorage.getItem('Nickname') || '')
+  // );
+
+  const SEARCH_OPTIONS = Object.freeze([
+    {
+      id: 0,
+      name: '유저',
+      value: 'user',
+      placeholder: '카트라이더 닉네임을 입력',
+    },
+    {
+      id: 1,
+      name: '카트',
+      value: 'kart',
+      placeholder: '카트바디 이름을 입력',
+    },
+    {
+      id: 2,
+      name: '트랙',
+      value: 'track',
+      placeholder: '트랙 이름을 입력',
+    },
+  ]);
+
+  const [searchOption, setSearchOption] = useState<ISelectOption>(
+    SEARCH_OPTIONS[0]
   );
 
   const navigtor = useNavigate();
 
-  // 일치 데이터 없을시 메세지
-
-  //keyword에 변화가 일어날때만 랜더링
   useEffect(() => {
     localStorage.setItem('keywords', JSON.stringify(keywords));
-    localStorage.setItem('Nickname', JSON.stringify(userName));
-  }, [keywords, userName]);
+    // localStorage.setItem('Nickname', JSON.stringify(userName));
+  }, [keywords]);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNickName(e.target.value);
+  };
+
+  const getUserNicknameData = (nickname: string) => {
+    axios
+      .get(BASE_URL + `users/nickname/${nickname}`, {
+        headers: {
+          Authorization: API_KEY,
+          ...JSON_HEADER,
+        },
+      })
+      .then((res) => {
+        localStorage.setItem('Nickname', JSON.stringify(res.data));
+        navigtor(`/user/${nickname}`);
+      })
+      .catch((error) => alert('해당없음'));
   };
 
   const onForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     getUserNicknameData(nickname);
     setNickName('');
-    navigtor(`/user/${userName}`);
   };
 
   const handleAddKeyword = (nickname: string) => {
@@ -52,7 +96,6 @@ const Search = () => {
     setKeywords([newKeyword, ...keywords]);
   };
 
-  //검색어 삭제
   const handleRemoveKeyword = (id: number) => {
     const nextKeyword = keywords.filter((Keyword: any) => {
       return Keyword.id !== id;
@@ -60,13 +103,27 @@ const Search = () => {
     setKeywords(nextKeyword);
   };
 
+  const handleChangeType = useCallback(
+    (target: ISelectOption) => {
+      setSearchOption(target);
+    },
+    [setSearchOption]
+  );
+
   return (
     <>
       <MarginTop margin={90} />
       <SearchWrap>
         <Form onSubmit={onForm}>
           <FormItem>
-            <InputSearch value={nickname} onChange={onChange} />
+            {/* <SelectBox> */}
+            <SelectType options={SEARCH_OPTIONS} onChange={handleChangeType} />
+            {/* </SelectBox> */}
+            <InputSearch
+              placeholder={searchOption.placeholder}
+              value={nickname}
+              onChange={onChange}
+            />
           </FormItem>
           <IconSearch onClick={() => handleAddKeyword(nickname)} />
         </Form>
@@ -96,6 +153,11 @@ const Search = () => {
 };
 
 export default Search;
+
+const inputWidth = '24em';
+const height = '2.44em';
+const selectWidth = '5em';
+const borderSize = '5px solid';
 
 const SearchWrap = styled.div`
   font-size: 1em;
@@ -136,14 +198,13 @@ const InputSearch = styled.input`
   display: block;
   flex: 1;
   height: 100%;
-  /* font-size: 1.2em; */
   background: transparent;
   border: 0;
   outline: none;
   color: inherit;
   padding: 0 10px 0 24px;
   &::placeholder {
-    color: red;
+    color: ${(props) => props.theme.white.darker};
     opacity: 0.5;
   }
 `;
@@ -194,3 +255,43 @@ const Text = styled.li`
     background: hsla(0, 0%, 100%, 0.3);
   }
 `;
+// const SelectBox = styled.div`
+//   label {
+//     position: relative;
+//     display: block;
+//     box-sizing: border-box;
+//     top: 39px;
+//     width: ${selectWidth};
+//     height: ${height};
+//     line-height: ${height};
+//     font-weight: 400;
+//     font-size: 16px;
+//     color: ${({ theme }) => theme.white.darker};
+//     background: transparent;
+//     border-right: 1px solid ${({ theme }) => theme.white.darker};
+//     padding-left: 0 10px;
+//     &::before {
+//       right: 1.5%;
+//       width: 0;
+//       height: 0;
+//       border-left: ${borderSize} transparent;
+//       border-right: ${borderSize} transparent;
+//       border-top: ${borderSize} ${({ theme }) => theme.white.darker};
+//       margin-right: 10px;
+//     }
+//   }
+//   select {
+//     width: ${selectWidth};
+//     height: ${height};
+//     line-height: ${height};
+//     font-weight: 400;
+//     font-size: 15px;
+//     border: 0;
+//     /* opacity: 0; */
+//     appearance: none;
+//     vertical-align: middle;
+//     option {
+//       background-color: transparent;
+//     }
+//   }
+// `;
