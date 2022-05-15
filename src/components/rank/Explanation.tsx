@@ -2,24 +2,24 @@ import styled from 'styled-components';
 import Sub from '../Sub';
 import dateFormat from './dateFormat';
 
-function Explanation() {
+const Explanation = () => {
   const date = dateFormat();
   return (
     <>
       <PageName>3월 TMI 랭킹</PageName>
       <Line />
-      <Sub>
+      <Sub color=''>
         <span>랭킹 산정기간</span>
         {date[0]} ~ {date[1]}
       </Sub>
-      <Sub>
+      <Sub color=''>
         <span>최근 업데이트</span>
         {date[1]} 00:00:00
       </Sub>
       {/* <RankGuide>랭킹가이드</RankGuide> */}
     </>
   );
-}
+};
 
 export default Explanation;
 
