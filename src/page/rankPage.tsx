@@ -1,12 +1,19 @@
 import styled from 'styled-components';
+import Explanation from '../components/rank/Explanation';
+import RankList from '../components/rank/RankList';
+import TopRank from '../components/rank/TopRank';
 import Wave from '../components/rank/Wave';
 const RankPage = () => {
   return (
     <Wrapper>
       <Background>
-        <ContentWarp></ContentWarp>
+        <ContentWarp>
+          <Explanation />
+          <TopRank />
+        </ContentWarp>
         <Wave />
       </Background>
+      <RankList />
     </Wrapper>
   );
 };
@@ -15,8 +22,8 @@ export default RankPage;
 
 const Wrapper = styled.section`
   width: 100%;
-  height: 100%;
-  max-height: 675px;
+  /* height: 100%; */
+  /* max-height: 675px; */
 `;
 
 const ContentWarp = styled.div`

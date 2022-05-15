@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { keyframes } from 'styled-components';
 import MarginTop from '../marginTop';
 import Tmibtn from '../../assets/tmibtn.svg';
-import { getUserNicknameData } from '../../service/API/api';
+// import { getUserNicknameData } from '../../service/API/api';
 import styled from 'styled-components';
 import { IoPerson, IoClose } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
@@ -14,6 +14,7 @@ import {
   JSON_HEADER,
 } from '../../service/shared/api-constant';
 import SelectType, { ISelectOption } from './selectType';
+import { API } from '../../service/API/api';
 
 export const expand = (width: string, minWidth: string) => keyframes`
   100%{
@@ -68,13 +69,7 @@ const Search = () => {
   };
 
   const getUserNicknameData = (nickname: string) => {
-    axios
-      .get(BASE_URL + `users/nickname/${nickname}`, {
-        headers: {
-          Authorization: API_KEY,
-          ...JSON_HEADER,
-        },
-      })
+    API.get(`/users/nickname/${nickname}`)
       .then((res) => {
         localStorage.setItem('Nickname', JSON.stringify(res.data));
         navigtor(`/user/${nickname}`);
