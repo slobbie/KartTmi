@@ -1,10 +1,13 @@
 import styled from 'styled-components';
+import Explanation from '../components/rank/Explanation';
 import Wave from '../components/rank/Wave';
 const RankPage = () => {
   return (
     <Wrapper>
       <Background>
-        <ContentWarp></ContentWarp>
+        <ContentWarp>
+          <Explanation />
+        </ContentWarp>
         <Wave />
       </Background>
     </Wrapper>
