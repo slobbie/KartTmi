@@ -14,8 +14,8 @@ export const getUserNicknameData = (nickname: string) => {
       },
     })
     .then((res) => res.data)
-    .then((data) => {
-      localStorage.setItem('Nickname', JSON.stringify(data));
-    })
+    // .then((data) => {
+    //   localStorage.setItem('Nickname', JSON.stringify(data));
+    // })
     .catch((error) => error);
 };
