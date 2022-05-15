@@ -4,6 +4,8 @@ import styled, { createGlobalStyle } from 'styled-components';
 import { Route, Routes } from 'react-router-dom';
 import Home from './page/home';
 import UserPage from './page/userPage';
+import RankPage from './page/rankPage';
+import Footer from './layout/footer';
 
 function App() {
   return (
@@ -13,7 +15,9 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/user/*' element={<UserPage />} />
+        <Route path='/rank' element={<RankPage />} />
       </Routes>
+      <Footer />
     </section>
   );
 }
